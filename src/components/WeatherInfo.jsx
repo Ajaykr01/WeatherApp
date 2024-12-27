@@ -1,35 +1,75 @@
-import React from "react";
+import React, { useState } from "react";
+import fetchWeatherData from "../API/api";
+import Error from "./Error";
+import HumidityWind from "./HumidityWind";
+import CityDate from "./CityDate";
+import IconDesc from "./IconDesc";
+import Forecast from "./Forecast";
 
 const WeatherInfo = () => {
+  const [city, setCity] = useState("");
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (city.trim()) {
+      setError(null);
+      setData(null);
+      setLoading(true);
+      const response = await fetchWeatherData(city);
+
+      if (response?.error) {
+        setError(response.error);
+        setData(null);
+      } else {
+        setData(response);
+        setError(null);
+        setCity("");
+        setLoading(false);
+      }
+    } else {
+      alert("Please enter a city name.");
+    }
+  };
+
   return (
     <div>
-      <div className="flex items-center justify-between h-10 w-[29rem] relative top-5">
-        <div className="flex">
-          <i className="fa-solid fa-location-dot relative top-1 text-xl text-white"></i>
-          <h2 className="relative left-1 text-lg font-bold text-white">
-            {weatherData.city.name}
-          </h2>
-        </div>
-        <div>
-          <p className="text-lg font-bold text-white">
-            {new Date(weatherData.list[2].dt * 1000).toLocaleDateString()}
-          </p>
-        </div>
-      </div>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-400 w-[30rem] h-12 flex justify-evenly items-center mt-5 rounded-3xl"
+      >
+        <input
+          className="bg-transparent outline-none h-full w-[25rem] placeholder-white text-white"
+          type="text"
+          placeholder="Search City"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        />
+        <i
+          onClick={handleSubmit}
+          className="fa-solid fa-magnifying-glass text-white cursor-pointer"
+        ></i>
+      </form>
 
-      <div className="flex w-full items-center justify-between mt-10">
+      {!data && !error && <Error error={error} />}
+
+      {loading && (
+        <div className="text-5xl text-white flex justify-center">
+          Loading...
+        </div>
+      )}
+
+      {!loading && data && (
         <div>
-          <img
-            className="w-32"
-            src={`https://openweathermap.org/img/wn/${weatherData.list[0].weather[0].icon}@4x.png`}
-            alt="weather icon"
-          />
+          <CityDate data={data} />
+          <IconDesc data={data} />
+          <HumidityWind data={data} />
+          <Forecast data={data} />
         </div>
-        <div className="text-2xl text-white">
-          <p>{(weatherData.list[0].main.temp - 273.15).toFixed(1) + "°C"}</p>
-          <span>{weatherData.list[0].weather[0].description}</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

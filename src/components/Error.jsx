@@ -1,6 +1,6 @@
 import React from "react";
 
-const Error = ({error}) => {
+const Error = ({ error }) => {
   return (
     <div className="error-container mt-10 flex flex-col items-center">
       <img
