@@ -9,7 +9,7 @@
 }
 
 body {
-  background-image: url("src/assets/images/bg.avif");
+  background-image: url("/bg.avif");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
