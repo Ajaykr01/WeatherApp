@@ -24,6 +24,8 @@ const WeatherInfo = () => {
       if (response?.error) {
         setError(response.error);
         setData(null);
+        setCity("");
+        setLoading(false);
       } else {
         setData(response);
         setError(null);
@@ -54,10 +56,10 @@ const WeatherInfo = () => {
         ></i>
       </form>
 
-      {!data && !error && <Error error={error} />}
+      {error && <Error data={{ message: error }} />}
 
       {loading && (
-        <div className="text-5xl text-white flex justify-center">
+        <div className="text-5xl text-white flex justify-center mt-48">
           Loading...
         </div>
       )}
