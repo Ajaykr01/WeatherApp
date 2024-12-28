@@ -4,7 +4,7 @@ const Error = ({ data }) => {
   return (
     <div className="error-container mt-10 flex flex-col items-center">
       <img
-        src="src/assets/images/notFound.png"
+        src="public/notFound.png"
         alt="Error msg"
         className="error-image w-[30rem]"
       />
